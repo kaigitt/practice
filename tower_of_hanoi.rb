@@ -9,3 +9,5 @@ def hanoi(n, from, to, via)
 end
 
 hanoi(3, :A, :B, :C)
+
+puts "{hanoi}"
