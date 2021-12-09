@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <script src="#"></script>
+    
+  </head>
+  <body>
+    
+    <div id="app1">
+      app1: {{ message }}
+    </div>
+    
+    <script>
+        const App1 = {
+          data() {
+            return {
+              message: "Hello!"
+            }
+            
+          }
+        }
+        
+        app1 = Vue.createApp(App1)
+        app1.mount('#app1')
+    </script>
+  </body>
+</html>
