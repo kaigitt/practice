@@ -9,7 +9,10 @@ public class Main {
         for (int i = 0; i < n; i++) {
             strs[i] = sc.next();
         }
-        
+        for (int i = 0; i < strs.length; i++) {
+          
+        }
+        System.out.println();
         
         //まずは全通りの組み合わせ実装
         checkPatter(strs);
