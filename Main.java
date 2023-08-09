@@ -1,23 +1,20 @@
 import java.util.*;
+
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
-        int m = sc.nextInt();
-        int saikyo = -1;
-        int winner = sc.nextInt();
-        int loser = sc.nextInt();
-
-        ArrayList<Integer> rank = new ArrayList<>();
-        for (int i = 0; i < m; i++) {
-          int A = sc.nextInt();
-          int B = sc.nextInt();
-          if()
-          
+        String flag = "DENIED";
+      	for (int i = 0; i < n; i++) {
+            int num = sc.nextInt();
+            if(num % 2 == 0){
+                if( num % 3 == 0 || num % 5 == 0){
+                  flag = "APPROVED";
+                } else {
+                  flag = "DENIED";
+                }
+            }
         }
-
-        
-        System.out.println(saikyo);
+      System.out.println(flag);
     }
-    
 }
