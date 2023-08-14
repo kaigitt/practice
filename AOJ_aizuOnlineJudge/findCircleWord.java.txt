@@ -1,0 +1,37 @@
+ package codechef;  don't place package name! 
+
+import java.util.;
+import java.lang.;
+import java.io.;
+
+ Name of the class has to be Main only if the class is public. 
+class Main{
+	public static void main (String[] args) throws java.lang.Exception
+	{
+	    Scanner sc = new Scanner(System.in);
+	    String list = sc.next();
+	    String str = sc.next();
+        
+        boolean flag = false;
+        for (int i = 0; i  list.length(); i++){
+            String line = list + list;
+            flag = canCreateSubstring(line, str);
+        }
+        
+        if(flag){
+            System.out.println(Yes);
+        } else {
+            System.out.println(No);
+        }
+	}
+	
+	public static boolean canCreateSubstring (String line, String str){
+	    for (int i = 0; i  line.length()-str.length(); i++){
+	        String substr = line.substring(i, i+str.length());
+	        if(substr.equals(str)){
+	            return true;
+	        }
+	    } 
+	    return false;
+	}
+}

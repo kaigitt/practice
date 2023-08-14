@@ -1,0 +1,28 @@
+/* package codechef; // don't place package name! */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+/* Name of the class has to be "Main" only if the class is public. */
+class Main{
+	public static void main (String[] args) throws java.lang.Exception
+	{
+	    Scanner sc = new Scanner(System.in);
+	    
+	    while(sc.hasNext()){
+	        String cards = sc.next();
+	        if(("-").equals(cards)){
+	            break;
+	        }
+	        int n = sc.nextInt();
+	        for (int i = 0; i < n; i++){
+	            int shuffle = sc.nextInt();
+	            cards = cards.substring(shuffle, cards.length()) +
+	                    cards.substring(0, shuffle);
+	        } 
+	        System.out.println(cards);
+	    }
+
+	}
+}

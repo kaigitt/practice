@@ -1,0 +1,33 @@
+/* package codechef; // don't place package name! */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+/* Name of the class has to be "Main" only if the class is public. */
+class Main{
+	public static void main (String[] args) throws java.lang.Exception
+	{
+	    Scanner sc = new Scanner(System.in);
+	    int n = sc.nextInt();
+	    int tarouPoint = 0;
+	    int hanakoPoint = 0;
+	    String tarou = "";
+	    String hanako = "";
+	    for (int i = 0; i < n; i++){
+	        tarou = sc.next();
+	        hanako = sc.next();
+	        
+	        if(tarou.compareToIgnoreCase(hanako) == 0){
+	            tarouPoint++;
+	            hanakoPoint++;
+	        } else if(tarou.compareToIgnoreCase(hanako) > 0) {
+	            tarouPoint += 3;    
+	        } else {
+	            hanakoPoint += 3;
+	        }
+	    } 
+	    
+	    System.out.println(tarouPoint + " " + hanakoPoint);
+	}
+}
