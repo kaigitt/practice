@@ -11,8 +11,6 @@ public class ContinuingCharactors {
           char[] c = str.toCharArray();
           for (int i = 0; i < c.length; i++) {
             
-            System.out.print(i); 
-              System.out.println(c[i]); 
             
           }
 
@@ -20,5 +18,9 @@ public class ContinuingCharactors {
 
         }
         
+
+        for (int i = 0; i < alphabet.length; i++) {
+          System.out.println(alphabet[i] + ":"+ );
+        }
     }
 }
