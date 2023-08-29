@@ -16,13 +16,12 @@ public class Main {
         System.out.println(count);
     }
 
-    // 180度回転しても整数として読めるかを判定する関数
+
     private static boolean isRotationValid(int num) {
         int rotatedNum = rotate180(num);
         return num == rotatedNum;
     }
 
-    // 数字を180度回転する関数
     private static int rotate180(int num) {
         int rotatedNum = 0;
         while (num > 0) {
@@ -41,7 +40,7 @@ public class Main {
                     rotatedDigit = 6;
                     break;
                 default:
-                    return -1; // 回転できない数字が含まれる場合はエラーとして-1を返す
+                    return -1; 
             }
             rotatedNum = rotatedNum * 10 + rotatedDigit;
             num /= 10;

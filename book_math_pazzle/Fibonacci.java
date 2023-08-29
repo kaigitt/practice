@@ -16,9 +16,16 @@ public class Fibonacci {
         if(x < 0){
           break;
         }
+        long splitTotal = String.valueOf(i) 
+
+
+
         b = a;
         a = x;
         x = 0;
+
+        //144を文字列に　分割する　リストにいれて　合計を求める
+
 
     }
   }
