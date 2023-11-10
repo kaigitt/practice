@@ -1,0 +1,14 @@
+import itertools
+import math
+
+N, P, Q = map(int, input().split())
+
+A = list(map(int, input().split()))
+
+res = 0
+
+for v in itertools.combinations(A, 5):
+    if(math.prod(v) % P == Q):
+        res += 1
+
+print(res)
