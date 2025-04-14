@@ -1,0 +1,53 @@
+
+@Component
+public class SearchFieldLabelMap {
+
+    private Map<String, String> fieldMap = new LinkedHashMap<>(); // 順序維持したい場合
+
+    @PostConstruct
+    public void load() throws IOException {
+        Resource resource = new ClassPathResource("static/config/search-fields.csv");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",", 2);
+                if (parts.length == 2) {
+                    fieldMap.put(parts[0].trim(), parts[1].trim());
+                }
+            }
+        }
+    }
+
+    public Map<String, String> getFieldMap() {
+        return fieldMap;
+    }
+
+    public String getLabel(String key) {
+        return fieldMap.getOrDefault(key, key);
+    }
+
+    public String getKeyByLabel(String label) {
+        return fieldMap.entrySet().stream()
+            .filter(e -> e.getValue().equals(label))
+            .map(Map.Entry::getKey)
+            .findFirst()
+            .orElse(label);
+    }
+}
+
+async function loadFieldLabelMap() {
+  const res = await fetch('/static/config/search-fields.csv');
+  const text = await res.text();
+
+  const lines = text.trim().split('\n');
+  const map = {};
+
+  lines.forEach(line => {
+    const [key, label] = line.split(',');
+    if (key && label) {
+      map[key.trim()] = label.trim();
+    }
+  });
+
+  return map;
+}
