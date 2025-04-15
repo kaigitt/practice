@@ -100,3 +100,58 @@ window.addEventListener('DOMContentLoaded', async () => {
   console.log(getKeyByLabel("開始日"));      // → "startDate"
 });
 
+
+<select id="advancedSearchProjects" parameterType="com.pasco.projecttracker.dto.AdvancedSearchForm" resultType="com.pasco.projecttracker.dto.SearchResult">
+  SELECT DISTINCT p.*
+  FROM projects p
+  LEFT JOIN wbs w ON p.project_id = w.project_id
+  LEFT JOIN engineers e ON w.wbs_no = e.wbs_no
+  <where>
+    <foreach collection="fields" item="field" index="i">
+      <choose>
+        <when test="inputTypes[i] == 'text'">
+          <choose>
+            <when test="comparisons[i] == 'contains'">
+              ${field} LIKE CONCAT('%', #{values[${i}]}, '%')
+            </when>
+            <when test="comparisons[i] == 'startsWith'">
+              ${field} LIKE CONCAT(#{values[${i}]}, '%')
+            </when>
+            <when test="comparisons[i] == 'endsWith'">
+              ${field} LIKE CONCAT('%', #{values[${i}]})
+            </when>
+            <when test="comparisons[i] == 'equals'">
+              ${field} = #{values[${i}]}
+            </when>
+          </choose>
+        </when>
+        <when test="inputTypes[i] == 'number' or inputTypes[i] == 'date'">
+          <choose>
+            <when test="comparisons[i] == 'equals'">
+              ${field} = #{values[${i}]}
+            </when>
+            <when test="comparisons[i] == 'greater'">
+              ${field} &gt; #{values[${i}]}
+            </when>
+            <when test="comparisons[i] == 'less'">
+              ${field} &lt; #{values[${i}]}
+            </when>
+            <when test="comparisons[i] == 'greaterOrEqual'">
+              ${field} &gt;= #{values[${i}]}
+            </when>
+            <when test="comparisons[i] == 'lessOrEqual'">
+              ${field} &lt;= #{values[${i}]}
+            </when>
+          </choose>
+        </when>
+        <when test="inputTypes[i] == 'boolean'">
+          ${field} = #{values[${i}]}
+        </when>
+      </choose>
+      <if test="i > 0">
+        ${operators[i-1]}
+      </if>
+    </foreach>
+  </where>
+</select>
+
