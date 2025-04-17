@@ -1,157 +1,32 @@
+async function downloadCSV() {
+  const form = document.getElementById('advancedSearchForm');
+  const searchFields = form.querySelectorAll('.search-field');
+  const errorDiv = document.getElementById('errorMessage');
 
-@Component
-public class SearchFieldLabelMap {
+  let hasEmpty = false;
 
-    private Map<String, String> fieldMap = new LinkedHashMap<>(); // 順序維持したい場合
+  // 対応する検索条件ごとにフィールドとバリューをペアでチェック
+  searchFields.forEach(field => {
+    const container = field.closest('.search-row'); // 各条件を囲む親要素などを想定
 
-    @PostConstruct
-    public void load() throws IOException {
-        Resource resource = new ClassPathResource("static/config/search-fields.csv");
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",", 2);
-                if (parts.length == 2) {
-                    fieldMap.put(parts[0].trim(), parts[1].trim());
-                }
-            }
-        }
-    }
+    // 表示されていない（非活性な）行はスキップ
+    if (container && container.offsetParent === null) return;
 
-    public Map<String, String> getFieldMap() {
-        return fieldMap;
-    }
+    // 対応する .search-value を取得
+    const valueInput = container.querySelector('.search-value');
 
-    public String getLabel(String key) {
-        return fieldMap.getOrDefault(key, key);
-    }
-
-    public String getKeyByLabel(String label) {
-        return fieldMap.entrySet().stream()
-            .filter(e -> e.getValue().equals(label))
-            .map(Map.Entry::getKey)
-            .findFirst()
-            .orElse(label);
-    }
-}
-
-async function loadFieldLabelMap() {
-  const res = await fetch('/static/config/search-fields.csv');
-  const text = await res.text();
-
-  const lines = text.trim().split('\n');
-  const map = {};
-
-  lines.forEach(line => {
-    const [key, label] = line.split(',');
-    if (key && label) {
-      map[key.trim()] = label.trim();
+    // 無効化されていない、かつ空ならエラー
+    if (valueInput && !valueInput.disabled && valueInput.value.trim() === '') {
+      hasEmpty = true;
     }
   });
 
-  return map;
+  if (hasEmpty) {
+    errorDiv.innerText = '検索条件の入力値が未入力の項目があります。\n全ての検索条件に値を入力してください。';
+    errorDiv.style.display = 'block';
+    return;
+  }
+
+  // チェック通過後の処理（CSV出力など）
 }
-
-
-// -----------------------------
-// 🔹 グローバルマップの定義
-// -----------------------------
-let fieldLabelMap = {};
-
-// -----------------------------
-// 🔹 CSVを読み込んでマップに格納
-// -----------------------------
-function loadFieldLabelMap() {
-  return fetch('/static/config/search-fields.csv')
-    .then(res => res.text())
-    .then(text => {
-      const lines = text.trim().split('\n');
-      lines.forEach(line => {
-        const [key, label] = line.split(',');
-        if (key && label) {
-          fieldLabelMap[key.trim()] = label.trim();
-        }
-      });
-    });
-}
-
-// -----------------------------
-// 🔹 キーから表示名を取得
-// -----------------------------
-function getLabelByKey(key) {
-  return fieldLabelMap[key] || key;
-}
-
-// -----------------------------
-// 🔹 表示名からキーを取得
-// -----------------------------
-function getKeyByLabel(label) {
-  return Object.keys(fieldLabelMap).find(k => fieldLabelMap[k] === label) || label;
-}
-
-// -----------------------------
-// 🔹 DOM描画後に初期化（例）
-// -----------------------------
-window.addEventListener('DOMContentLoaded', async () => {
-  await loadFieldLabelMap();
-
-  // 読み込まれたあとで使える
-  console.log(getLabelByKey("projectId"));   // → "プロジェクトID"
-  console.log(getKeyByLabel("開始日"));      // → "startDate"
-});
-
-
-<select id="advancedSearchProjects" parameterType="com.pasco.projecttracker.dto.AdvancedSearchForm" resultType="com.pasco.projecttracker.dto.SearchResult">
-  SELECT DISTINCT p.*
-  FROM projects p
-  LEFT JOIN wbs w ON p.project_id = w.project_id
-  LEFT JOIN engineers e ON w.wbs_no = e.wbs_no
-  <where>
-    <foreach collection="fields" item="field" index="i">
-      <choose>
-        <when test="inputTypes[i] == 'text'">
-          <choose>
-            <when test="comparisons[i] == 'contains'">
-              ${field} LIKE CONCAT('%', #{values[${i}]}, '%')
-            </when>
-            <when test="comparisons[i] == 'startsWith'">
-              ${field} LIKE CONCAT(#{values[${i}]}, '%')
-            </when>
-            <when test="comparisons[i] == 'endsWith'">
-              ${field} LIKE CONCAT('%', #{values[${i}]})
-            </when>
-            <when test="comparisons[i] == 'equals'">
-              ${field} = #{values[${i}]}
-            </when>
-          </choose>
-        </when>
-        <when test="inputTypes[i] == 'number' or inputTypes[i] == 'date'">
-          <choose>
-            <when test="comparisons[i] == 'equals'">
-              ${field} = #{values[${i}]}
-            </when>
-            <when test="comparisons[i] == 'greater'">
-              ${field} &gt; #{values[${i}]}
-            </when>
-            <when test="comparisons[i] == 'less'">
-              ${field} &lt; #{values[${i}]}
-            </when>
-            <when test="comparisons[i] == 'greaterOrEqual'">
-              ${field} &gt;= #{values[${i}]}
-            </when>
-            <when test="comparisons[i] == 'lessOrEqual'">
-              ${field} &lt;= #{values[${i}]}
-            </when>
-          </choose>
-        </when>
-        <when test="inputTypes[i] == 'boolean'">
-          ${field} = #{values[${i}]}
-        </when>
-      </choose>
-      <if test="i > 0">
-        ${operators[i-1]}
-      </if>
-    </foreach>
-  </where>
-</select>
 
